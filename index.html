@@ -49,7 +49,8 @@ function sy(v){ return P.t+gH*(1-(v-yMin)/(yMax-yMin)); }
 function sx(i){ return P.l+(i+0.5)/n*gW; }
 
 var o=[]; // svg parts
-o.push('<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" style="display:block;overflow:visible">');
+var svgW = W>50 ? W : 600;
+o.push('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+svgW+' '+H+'" width="100%" style="display:block;overflow:visible;max-width:100%">');
 
 // grid + y labels
 for(var t=0;t<=5;t++){
@@ -120,11 +121,13 @@ this._div=div; this._cfg=config;
 var self=this;
 function attempt(tries){
 var W=div.getBoundingClientRect().width||div.offsetWidth||0;
-if(W<50 && tries<15){ setTimeout(function(){ attempt(tries+1); }, 80); return; }
+if(W<50 && tries<30){ setTimeout(function(){ attempt(tries+1); }, 150); return; }
 drawSVG(div, config);
 }
-if(document.readyState===‘complete’){ attempt(0); }
-else { window.addEventListener(‘load’,function(){ attempt(0); }); attempt(0); }
+attempt(0);
+window.addEventListener(‘load’,function(){ attempt(0); },{once:true});
+setTimeout(function(){ attempt(0); }, 1000);
+setTimeout(function(){ attempt(0); }, 3000);
 this._onResize=function(){ drawSVG(div, config); };
 window.addEventListener(‘resize’,this._onResize);
 }
